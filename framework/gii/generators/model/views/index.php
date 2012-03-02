@@ -1,8 +1,6 @@
 <?php
 $class=get_class($model);
-$cs=Yii::app()->clientScript;
-$cs->registerCoreScript('jquery.ui');
-$cs->registerScript('gii.model',"
+Yii::app()->clientScript->registerScript('gii.model',"
 $('#{$class}_modelClass').change(function(){
 	$(this).data('changed',$(this).val()!='');
 });
@@ -62,6 +60,10 @@ $('.form .row.model-class').toggle($('#{$class}_tableName').val().substring($('#
 			'source'=>array_keys(Yii::app()->db->schema->getTables()),
 			'options'=>array(
 				'minLength'=>'0',
+				'focus' => 'js:function(event,ui) {
+					$("#'.CHtml::activeId($model,'tableName').'").val(ui.item.label);
+					return false;
+				}'
 			),
 			'htmlOptions'=>array(
 				'id'=>'ModelCode_tableName',
