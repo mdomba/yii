@@ -1289,7 +1289,10 @@ abstract class CActiveRecord extends CModel
 			if(!$all)
 				$criteria->limit=1;
 			$command=$this->getCommandBuilder()->createFindCommand($this->getTableSchema(),$criteria);
-			return $all ? $this->populateRecords($command->queryAll(), true, $criteria->index) : $this->populateRecord($command->queryRow());
+			if($criteria->asArray)
+				return $all ? $command->queryAll() : $command->queryRow();
+			else
+				return $all ? $this->populateRecords($command->queryAll(), true, $criteria->index) : $this->populateRecord($command->queryRow());
 		}
 		else
 		{
@@ -1663,6 +1666,19 @@ abstract class CActiveRecord extends CModel
 	public function together()
 	{
 		$this->getDbCriteria()->together=true;
+		return $this;
+	}
+
+	/**
+	 * Sets {@link CDbCriteria::asArray} property to be true.
+	 * This is only used in relational AR query. Please refer to {@link CDbCriteria::asArray}
+	 * for more details.
+	 * @return CActiveRecord the AR object itself
+	 * @since 1.1.4
+	 */
+	public function asArray()
+	{
+		$this->getDbCriteria()->asArray=true;
 		return $this;
 	}
 
@@ -2306,7 +2322,7 @@ class CActiveRecordMetaData
 	 * @throws CDbException
 	 * @param string $name $name Name of the relation.
 	 * @param array $config $config Relation parameters.
-     * @return void
+	 * @return void
 	 * @since 1.1.2
 	 */
 	public function addRelation($name,$config)
