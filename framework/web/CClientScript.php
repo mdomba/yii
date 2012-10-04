@@ -366,7 +366,7 @@ class CClientScript extends CApplicationComponent
 			}
 
 			if(isset($this->scripts[self::POS_HEAD]))
-				$html.=CHtml::script(implode("\n",$this->scripts[self::POS_HEAD]))."\n";
+				$html.=CHtml::script("(function($) {\n".implode("\n",$this->scripts[self::POS_HEAD])."\n})(jQuery);")."\n";
 		}
 
 		if($html!=='')
@@ -393,7 +393,7 @@ class CClientScript extends CApplicationComponent
 				$html.=CHtml::scriptFile($scriptFile)."\n";
 		}
 		if(isset($this->scripts[self::POS_BEGIN]))
-			$html.=CHtml::script(implode("\n",$this->scripts[self::POS_BEGIN]))."\n";
+			$html.=CHtml::script("(function($) {\n".implode("\n",$this->scripts[self::POS_BEGIN])."\n})(jQuery);")."\n";
 
 		if($html!=='')
 		{
@@ -430,17 +430,17 @@ class CClientScript extends CApplicationComponent
 			if($fullPage)
 				$scripts[]="jQuery(function($) {\n".implode("\n",$this->scripts[self::POS_READY])."\n});";
 			else
-				$scripts[]=implode("\n",$this->scripts[self::POS_READY]);
+				$scripts[]="(function($) {\n".implode("\n",$this->scripts[self::POS_READY])."\n})(jQuery);";
 		}
 		if(isset($this->scripts[self::POS_LOAD]))
 		{
 			if($fullPage)
 				$scripts[]="jQuery(window).load(function() {\n".implode("\n",$this->scripts[self::POS_LOAD])."\n});";
 			else
-				$scripts[]=implode("\n",$this->scripts[self::POS_LOAD]);
+				$scripts[]="(function($) {\n".implode("\n",$this->scripts[self::POS_LOAD])."\n})(jQuery);";
 		}
 		if(!empty($scripts))
-			$html.=CHtml::script(implode("\n",$scripts))."\n";
+			$html.=CHtml::script("(function($) {\n".implode("\n",$scripts)."\n})(jQuery);")."\n";
 
 		if($fullPage)
 			$output=str_replace('<###end###>',$html,$output);
